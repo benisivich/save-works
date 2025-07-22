@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Quiz Game</title>
+
+  </head>
+  <body>
+    <div class="container">
+        <h2>Interactive Quiz Game</h2>
+    </div> 
+  </body>
+
+  <div id="quiz-container" class="quiz-container">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">General Knowledge Quiz</h1>
+    <div id="question-display" class="question-text"></div>
+    <div id="options-container" class="options-container">
+    </div>
+    <div id="feedback-message" class="feedback-message"></div>
+    <div id="score-display" class="score-display">Score: 0</div>
+    <button id="next-button" class="next-button hidden">Next Question</button>
+</div>
+
+<div id="final-score-container" class="final-score-container">
+    <h2 class="final-score-text">Quiz Complete!</h2>
+    <div id="final-score" class="score-display">Your final score: 0</div>
+    <div id="performance-message" class="performance-message"></div>
+    <button id="restart-button" class="restart-button">Play Again</button>
+</div>
+
+<script>
+    const quizQuestions = [
+        {
+            question: "What is the capital of the Philippines?",
+            options: ["Quezon", "Batangas", "Manila", "Iligan"],
+            correctAnswer: "Manila"
+        },
+        {
+            question: "What is the national animal of the Philippines?",
+            options: ["Eagle", "Lion", "Dog", "Carabao"],
+            correctAnswer: "Carabao"
+        },
+        {
+            question: "Philippine National Hero?",
+            options: ["Jose Rizal", "BongBong", "LapuLapu", "Juan Ponce Enrile"],
+            correctAnswer: "Jose Rizal"
+        },       
+    ];
