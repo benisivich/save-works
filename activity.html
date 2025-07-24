@@ -2,48 +2,101 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Interactive Quiz Game</title>
-
-  </head>
-  <body>
-    <div class="container">
-        <h2>Interactive Quiz Game</h2>
-    </div> 
-  </body>
-
-  <div id="quiz-container" class="quiz-container">
-    <h1 class="text-3xl font-bold text-gray-800 mb-6">General Knowledge Quiz</h1>
-    <div id="question-display" class="question-text"></div>
-    <div id="options-container" class="options-container">
-    </div>
-    <div id="feedback-message" class="feedback-message"></div>
-    <div id="score-display" class="score-display">Score: 0</div>
-    <button id="next-button" class="next-button hidden">Next Question</button>
-</div>
-
-<div id="final-score-container" class="final-score-container">
-    <h2 class="final-score-text">Quiz Complete!</h2>
-    <div id="final-score" class="score-display">Your final score: 0</div>
-    <div id="performance-message" class="performance-message"></div>
-    <button id="restart-button" class="restart-button">Play Again</button>
-</div>
-
-<script>
-    const quizQuestions = [
-        {
-            question: "What is the capital of the Philippines?",
-            options: ["Quezon", "Batangas", "Manila", "Iligan"],
-            correctAnswer: "Manila"
-        },
-        {
-            question: "What is the national animal of the Philippines?",
-            options: ["Eagle", "Lion", "Dog", "Carabao"],
-            correctAnswer: "Carabao"
-        },
-        {
-            question: "Philippine National Hero?",
-            options: ["Jose Rizal", "BongBong", "LapuLapu", "Juan Ponce Enrile"],
-            correctAnswer: "Jose Rizal"
-        },       
+  <style>
+    body { font-family: Arial, sans-serif; background: #2aadd4; }
+    #quiz-box { background: #fff; max-width: 1000px; margin: 300px auto; padding: 24px; border-radius: 8px; box-shadow: 0 2px 8px #ccc; }
+    .question { font-size: 1.2em; margin-bottom: 16px; }
+    .option { display: block; margin: 8px 0; }
+    #score { margin-top: 16px; font-weight: bold; }
+    #feedback { margin-top: 12px; }
+    #next-btn { margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div id="quiz-box">
+    <div id="question-area"></div>
+    <div id="options-area"></div>
+    <div id="feedback"></div>
+    <button id="next-btn" style="display:none;">Next</button>
+    <div id="score"></div>
+  </div>
+  <script>
+    const qQuestions = [
+      {
+        question: "What is the capital of the Philippines?",
+        options: 
+        [ "A. Quezon", "B. Manila", "C. Batangas", "D. Iligan"],
+        answer: 1
+      },
+      {
+        question: "Philippine National Hero?",
+        options: 
+        [ "A. Emilio Aguinaldo", "B. Andres Bonifacio", "C. Fhukerat", "D. Jose Rizal" ],
+        answer: 3
+      },
     ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function Questionshow() {
+      document.getElementById('feedback').textContent = '';
+      document.getElementById('next-btn').style.display = 'none';
+      const q = qQuestions[currentQ];
+      document.getElementById('question-area').textContent = q.question;
+      const optionsArea = document.getElementById('options-area');
+      optionsArea.innerHTML = '';
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.textContent = opt;
+        btn.className = 'option';
+        btn.onclick = () => checkAns(idx);
+        optionsArea.appendChild(btn);
+      });
+      document.getElementById('score').textContent = `Score: ${score}`;
+    }
+
+    function checkAns(selected) {
+      const q = qQuestions[currentQ];
+      let feedback = '';
+      if (selected === q.answer) {
+        feedback = "Correct!";
+        score++;
+      } else {
+        feedback = "Incorrect!";
+      }
+      document.getElementById('feedback').textContent = feedback;
+      Array.from(document.getElementsByClassName('option')).forEach(btn => btn.disabled = true);
+      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById('next-btn').style.display = 'inline-block';
+    }
+
+    document.getElementById('next-btn').onclick = () => {
+      currentQ++;
+      if (currentQ < qQuestions.length) {
+        Questionshow();
+      } else {
+        endQuiz();
+      }
+    };
+
+    function endQuiz() {
+      let message = '';
+      if (score === qQuestions.length) {
+        message = "Very Good!";
+      } else if (score >= qQuestions.length / 2) {
+        message = "Nice Try!";
+      } else {
+        message = "Please try again!";
+      }
+      document.getElementById('quiz-box').innerHTML =
+        `<h2>Quiz is Complete!</h2>
+         <p>The final score: ${score} / ${qQuestions.length}</p>
+         <p>${message}</p>`;
+    }
+
+    Questionshow();
+  </script>
+</body>
+</html>
