@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emoji Reaction Board</title>
+    <style>
+        body 
+        { font-family: 'Courier New', Courier, monospace; background: #FFB6C1; margin: 0; padding: 20px;text-align: center;}
+        
+        .container 
+        { max-width: 10000px; margin: 0 auto; background: white; padding: 40px;}
+                
+        .emoji-buttons 
+        { margin-bottom: 10px; padding: 10px;}
+        
+        .emoji-btn 
+        { font-size: 48px; padding: 8px 12px; margin: 5px; border: 2px solid #ddd; background: white; border-radius: 5px;}
+
+        .grid 
+        { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #0c0c0cef; padding: 10px;}
+        
+        .cell 
+        { width: 130px; height: 130px; background: white; border: 1px solid #ccc; display: flex; align-items: center;
+            justify-content: center;}
+        
+        .cell:hover { background: #F5F5DC; }
+        #clearBtn { background: #ff4757; color: white; border: none; margin-bottom: 20px; font-size: 18px; font-family: 'Courier New', Courier, monospace;}
+  </style>
+</head>
+<body>
+
+<h2>Emoji Reaction Board</h2>
+
+<div class="emoji-buttons">
+  <button onclick="chosenEmoji('&#9917')">&#9917</button> 
+  <button onclick="chosenEmoji('&#9918')">&#9918</button>
+  <button onclick="chosenEmoji('&#127936')">&#127936</button>
+  <button onclick="chosenEmoji('&#127933')">&#127933</button>
+  <button onclick="chosenEmoji('&#127944')">&#127944</button>
+  <button onclick="chosenEmoji('&#129358')">&#129358</button>
+  <button onclick="chosenEmoji('&#129354')"> &#129354</button>
+  <button onclick="chosenEmoji('&#127937')">&#127937</button>
+
+</div>
+
+<button id="clearBtn" onclick="RemoveAll()">Remove All</button>
+
+<div class="grid" id="emoji-Grid"></div>
+
+<script>
+  var EmojiSelected = "";
+
+  function chosenEmoji(emoji) {
+    EmojiSelected = emoji;
+  }
+
+  var grid = document.getElementById("emoji-Grid");
+
+  for (var i = 0; i < 30;i++){ 
+    var cell = document.createElement("div");
+    cell.className = "cell";
+    cell.onclick = function() {
+      if (this.innerHTML == EmojiSelected) {
+        this.innerHTML = "";
+      } else {
+        this.innerHTML = EmojiSelected;
+      }
+    };
+    grid.appendChild(cell);
+  }
+
+  function RemoveAll() {
+    var cells = document.getElementsByClassName("cell");
+    for (var i = 0; i < cells.length; i++) {
+      cells[i].innerHTML = "";
+    }
+  }
+</script>
+
+</body>
+</html>
