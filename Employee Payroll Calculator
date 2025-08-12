@@ -73,7 +73,6 @@ function sortEmployeesByNetPay($employees) {
     usort($employees_with_net_pay, function($a, $b) {
         return $b['net_pay'] - $a['net_pay'];
     });
-    
     return $employees_with_net_pay;
 }
 function formatCurrency($amount) {
@@ -108,7 +107,6 @@ function displayPayroll($employees) {
         echo "<td>" . formatCurrency($net_pay) . "</td>";
         echo "</tr>";
     }
-    
     echo "</tbody>";
     echo "</table>";
     echo "</div>";
