@@ -1,0 +1,193 @@
+<?php
+$employees = [
+    [
+        "name" => "juan dela cruz",
+        "position" => "Software Engineer",
+        "days_worked" => 20,
+        "daily_rate" => 1500,
+        "deduction" => 2000
+    ],
+    [
+        "name" => "maria santos",
+        "position" => "UI/UX Designer",
+        "days_worked" => 22,
+        "daily_rate" => 1400,
+        "deduction" => 1500
+    ],
+    [
+        "name" => "pedro reyes",
+        "position" => "Project Manager",
+        "days_worked" => 18,
+        "daily_rate" => 2000,
+        "deduction" => 3000
+    ]
+];
+function calculateGrossPay($days_worked, $daily_rate) {
+    return $days_worked * $daily_rate;
+}
+function calculateNetPay($gross_pay, $deduction) {
+    return $gross_pay - $deduction;
+}
+function formatName($name) {
+    return ucwords(strtolower($name));
+}
+function findHighestNetPayEmployee($employees) {
+    $highest_net_pay = 0;
+    $highest_employee = null;
+    
+    foreach ($employees as $employee) {
+        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
+        
+        if ($net_pay > $highest_net_pay) {
+            $highest_net_pay = $net_pay;
+            $highest_employee = $employee;
+        }
+    }
+    
+    return $highest_employee;
+}
+function calculateTotalPayrollCost($employees) {
+    $total_cost = 0;
+    
+    foreach ($employees as $employee) {
+        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
+        $total_cost += $gross_pay;
+    }
+    
+    return $total_cost;
+}
+function sortEmployeesByNetPay($employees) {
+    $employees_with_net_pay = [];
+    
+    foreach ($employees as $employee) {
+        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
+        
+        $employees_with_net_pay[] = [
+            'employee' => $employee,
+            'gross_pay' => $gross_pay,
+            'net_pay' => $net_pay
+        ];
+    }   
+    usort($employees_with_net_pay, function($a, $b) {
+        return $b['net_pay'] - $a['net_pay'];
+    });
+    
+    return $employees_with_net_pay;
+}
+function formatCurrency($amount) {
+    return "P" . number_format($amount, 2);
+}
+function displayPayroll($employees) {
+    echo "<div class='payroll-container'>";
+    echo "<h1 class='payroll-title'>EMPLOYEE PAYROLL</h1>";
+    echo "<table class='payroll-table'>";
+    echo "<thead>";
+    echo "<tr>";
+    echo "<th>Name</th>";
+    echo "<th>Position</th>";
+    echo "<th>Gross Pay</th>";
+    echo "<th>Net Pay</th>";
+    echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+    
+    foreach ($employees as $employee) {
+        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
+        $formatted_name = formatName($employee['name']);
+        
+        $is_highest = ($employee['name'] === 'pedro reyes');
+        $row_class = $is_highest ? 'highest-paid' : '';
+        
+        echo "<tr class='$row_class'>";
+        echo "<td>" . $formatted_name . "</td>";
+        echo "<td>" . $employee['position'] . "</td>";
+        echo "<td>" . formatCurrency($gross_pay) . "</td>";
+        echo "<td>" . formatCurrency($net_pay) . "</td>";
+        echo "</tr>";
+    }
+    
+    echo "</tbody>";
+    echo "</table>";
+    echo "</div>";
+}
+function displayAdditionalInfo($employees) {
+    $highest_employee = findHighestNetPayEmployee($employees);
+    $total_cost = calculateTotalPayrollCost($employees);
+    $sorted_employees = sortEmployeesByNetPay($employees);
+    
+    echo "<div class='additional-info'>";
+    
+    echo "<div class='info-section'>";
+    echo "<h2>Employee with Highest Net Pay</h2>";
+    $highest_gross = calculateGrossPay($highest_employee['days_worked'], $highest_employee['daily_rate']);
+    $highest_net = calculateNetPay($highest_gross, $highest_employee['deduction']);
+    echo "<p><strong>" . formatName($highest_employee['name']) . "</strong> - " . $highest_employee['position'] . "</p>";
+    echo "<p>Net Pay: " . formatCurrency($highest_net) . "</p>";
+    echo "</div>";
+    
+    echo "<div class='info-section'>";
+    echo "<h2>Total Payroll Cost</h2>";
+    echo "<p>" . formatCurrency($total_cost) . "</p>";
+    echo "</div>";
+    
+    echo "<div class='info-section'>";
+    echo "<h2>Employees Sorted by Net Pay (Descending)</h2>";
+    echo "<table class='sorted-table'>";
+    echo "<thead>";
+    echo "<tr>";
+    echo "<th>Rank</th>";
+    echo "<th>Name</th>";
+    echo "<th>Position</th>";
+    echo "<th>Net Pay</th>";
+    echo "</tr>";
+    echo "</thead>";
+    echo "<tbody>";
+    
+    $rank = 1;
+    foreach ($sorted_employees as $item) {
+        echo "<tr>";
+        echo "<td>" . $rank . "</td>";
+        echo "<td>" . formatName($item['employee']['name']) . "</td>";
+        echo "<td>" . $item['employee']['position'] . "</td>";
+        echo "<td>" . formatCurrency($item['net_pay']) . "</td>";
+        echo "</tr>";
+        $rank++;
+    }
+    echo "</tbody>";
+    echo "</table>";
+    echo "</div>";
+    
+    echo "</div>";
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Payroll System</title>
+    <style>
+        body 
+        {font-family: Arial, sans-serif; background-color: #FFB6C1; margin: 20px; color: black;}      
+        
+        .payroll-title 
+        {text-align: center; color: black; font-size: 24px; margin-bottom: 20px; text-transform: uppercase;}
+        
+        .info-section 
+        { margin-bottom: 20px; padding: 15px; border: 1px solid black;}
+        
+        .info-section h2 
+        { color: black; margin-top: 0; font-size: 18px;}      
+    </style>
+</head>
+<body>
+    <?php
+    displayPayroll($employees);
+    
+    displayAdditionalInfo($employees);
+    ?>
+</body>
+</html>
