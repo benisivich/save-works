@@ -22,13 +22,13 @@ $employees = [
         "deduction" => 3000
     ]
 ];
-function calculateGrossPay($days_worked, $daily_rate) {
+function GrossPaycalculate($days_worked, $daily_rate) {
     return $days_worked * $daily_rate;
 }
-function calculateNetPay($gross_pay, $deduction) {
+function NetPaycalculate($gross_pay, $deduction) {
     return $gross_pay - $deduction;
 }
-function formatName($name) {
+function fName($name) {
     return ucwords(strtolower($name));
 }
 function findHighestNetPayEmployee($employees) {
@@ -36,8 +36,8 @@ function findHighestNetPayEmployee($employees) {
     $highest_employee = null;
     
     foreach ($employees as $employee) {
-        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
-        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
+        $gross_pay = GrossPaycalculate($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = NetPaycalculate($gross_pay, $employee['deduction']);
         
         if ($net_pay > $highest_net_pay) {
             $highest_net_pay = $net_pay;
@@ -51,7 +51,7 @@ function calculateTotalPayrollCost($employees) {
     $total_cost = 0;
     
     foreach ($employees as $employee) {
-        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
+        $gross_pay = GrossPaycalculate($employee['days_worked'], $employee['daily_rate']);
         $total_cost += $gross_pay;
     }
     
@@ -61,8 +61,8 @@ function sortEmployeesByNetPay($employees) {
     $employees_with_net_pay = [];
     
     foreach ($employees as $employee) {
-        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
-        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
+        $gross_pay = GrossPaycalculate($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = NetPaycalculate($gross_pay, $employee['deduction']);
         
         $employees_with_net_pay[] = [
             'employee' => $employee,
@@ -93,9 +93,9 @@ function displayPayroll($employees) {
     echo "<tbody>";
     
     foreach ($employees as $employee) {
-        $gross_pay = calculateGrossPay($employee['days_worked'], $employee['daily_rate']);
-        $net_pay = calculateNetPay($gross_pay, $employee['deduction']);
-        $formatted_name = formatName($employee['name']);
+        $gross_pay = GrossPaycalculate($employee['days_worked'], $employee['daily_rate']);
+        $net_pay = NetPaycalculate($gross_pay, $employee['deduction']);
+        $formatted_name = fName($employee['name']);
         
         $is_highest = ($employee['name'] === 'pedro reyes');
         $row_class = $is_highest ? 'highest-paid' : '';
@@ -120,9 +120,9 @@ function displayAdditionalInfo($employees) {
     
     echo "<div class='info-section'>";
     echo "<h2>Employee with Highest Net Pay</h2>";
-    $highest_gross = calculateGrossPay($highest_employee['days_worked'], $highest_employee['daily_rate']);
-    $highest_net = calculateNetPay($highest_gross, $highest_employee['deduction']);
-    echo "<p><strong>" . formatName($highest_employee['name']) . "</strong> - " . $highest_employee['position'] . "</p>";
+    $highest_gross = GrossPaycalculate($highest_employee['days_worked'], $highest_employee['daily_rate']);
+    $highest_net = NetPaycalculate($highest_gross, $highest_employee['deduction']);
+    echo "<p><strong>" . fName($highest_employee['name']) . "</strong> - " . $highest_employee['position'] . "</p>";
     echo "<p>Net Pay: " . formatCurrency($highest_net) . "</p>";
     echo "</div>";
     
@@ -148,7 +148,7 @@ function displayAdditionalInfo($employees) {
     foreach ($sorted_employees as $item) {
         echo "<tr>";
         echo "<td>" . $rank . "</td>";
-        echo "<td>" . formatName($item['employee']['name']) . "</td>";
+        echo "<td>" . fName($item['employee']['name']) . "</td>";
         echo "<td>" . $item['employee']['position'] . "</td>";
         echo "<td>" . formatCurrency($item['net_pay']) . "</td>";
         echo "</tr>";
@@ -179,6 +179,13 @@ function displayAdditionalInfo($employees) {
         
         .info-section h2 
         { color: black; margin-top: 0; font-size: 18px;}      
+        
+        .additional-info 
+        { display: flex; flex-direction: row; gap: 15px;}
+
+       .info-section 
+       {margin-bottom: 20px; padding: 15px; border: 1px solid black; 
+       flex: 1; margin-right: 15px;}
     </style>
 </head>
 <body>
